@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css?family=Warnes');
+
+.navigation {
+  text-align: center;
+  padding-bottom: 4%;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: center;
+  align-items: center;
+}
+
+.item {
+  flex: none;
+  max-width: 60%;
+}
+
+
+.nav-container {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: center;
+  align-items: center;
+}
+
+.nav-item {
+  flex: none;
+  max-width: 100%;
+}
+
+.column {
+    float: left;
+    width: 50%;
+}
+
+
+
+
+html {
+  /* background: #; */
+  margin: auto;
+}
+
+
+h1 {
+	font-family: 'Warnes', cursive;
+	font-weight: normal;
+  text-align: center;
+	font-size: 3.7em;
+	line-height: 1.2em;
+	color: rgba(255,255,255,1);
+  padding-top: 4%;
+}
+
+.neon_text {
+	text-shadow:
+		-2px -2px 10px #fff,
+		2px 2px 10px #fff,
+		0 0 20px #4717F6,
+		0 0 40px #4717F6,
+		0 0 60px #4717F6,
+		0 0 80px #4717F6,
+		0 0 100px #4717F6;
+}
+
+
+/* BUTTONS */
+
+
+* {
+  font-family: 'Roboto', sans-serif;
+}
+/* .btn-container {
+  position: absolute;
+  top:50%;
+  left:50%;
+  margin-left: -65px;
+  margin-top: -20px;
+  width: 130px;
+  height: 40px;
+  text-align: center;
+} */
+button {
+  outline:none;
+  height: 40px;
+  text-align: center;
+  width: 130px;
+  border-radius:40px;
+  background: #fff;
+  border: 2px solid #A239CA;
+  color:#A239CA;
+  letter-spacing:1px;
+  text-shadow:0;
+  font:{
+    size:12px;
+    weight:bold;
+  }
+  cursor: pointer;
+  transition: all 0.25s ease;
+  &:hover {
+    color:white;
+    background: #A239CA;
+  }
+  &:active {
+    //letter-spacing: 2px;
+    letter-spacing: 2px ;
+  }
+  &:after {
+    content:"SUBMIT";
+  }
+}
+.onclic {
+  width: 40px;
+  border-color:gray;
+  border-width:3px;
+  font-size:0;
+  border-left-color:#A239CA;
+  animation: rotating 2s 0.25s linear infinite;
+
+  &:after {
+    content:"";
+  }
+  &:hover {
+    color:#A239CA;
+    background: white;
+  }
+}
+.validate {
+  font-size:13px;
+  color: white;
+  background: #A239CA;
+  &:after {
+    font-family:'FontAwesome';
+    content:"\f00c";
+  }
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

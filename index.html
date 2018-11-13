@@ -1,10 +1,57 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
+    <title>Cocktail Club</title>
     <meta charset="utf-8">
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Warnes
+      ">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="drink.css" />
     <title></title>
   </head>
   <body>
+    <h1 class="neon_text">regular status</h1>
+    <div class="nav-container">
 
+      <div class="navigation nav-item">
+
+        <button id="button" class="test-btn">Quiz me!</button>
+        <button id="button" class="study-btn">Study Recipes</button>
+        <button id="button" class="create-btn">Add Recipe</button>
+
+      </div>
+
+    </div>
+
+    <div class="main container">
+      <p class="item about">ABOUT Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+      <div class="row quiz" hidden>
+        <div class="column">
+          <div id="loader">
+              <div id="lemon"></div>
+              <div id="straw"></div>
+              <div id="glass">
+                  <div id="cubes">
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                  </div>
+                  <div id="drink"></div>
+                  <span id="counter"></span>
+              </div>
+              <div id="coaster"></div>
+          </div>
+          <footer>Please wait while<br>we fill up your glass...</footer>
+        </div>
+        <div class="column">
+  
+        </div>
+      </div>
+    </div>
+  <script src="src/index.js"></script>
+  <script src="src/buttons.js"></script>
+  <script src="src/drink.js"></script>
   </body>
 </html>
