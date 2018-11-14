@@ -1,4 +1,16 @@
 @import url('https://fonts.googleapis.com/css?family=Warnes');
+html { height: 100%; }
+body {
+    /* position: relative; */
+    margin: 25px;
+    height: 100%;
+    background: linear-gradient(white, #473870, #0e0b16);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    /* text-align: center; */
+}
 
 .navigation {
   text-align: center;
@@ -7,16 +19,47 @@
 
 .container {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   flex-direction: row;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-content: center;
-  align-items: center;
+  align-items: stretch;
 }
 
 .item {
   flex: none;
-  max-width: 60%;
+  width: 30%;
+  max-height: auto;
+  min-height: 300px;
+  padding: 25px;
+  margin: 10px;
+  vertical-align: top;
+  align-content: space-between;
+  background: #f2f2f2;
+  border-radius: 25px;
+
+}
+
+.item-about {
+  flex: none;
+  width: 40%;
+  max-height: auto;
+  padding: 25px;
+  margin: 10px;
+  vertical-align: top;
+  align-content: space-between;
+  background: #3e3260; opacity: 0.5;
+  color: #f2f2f2; opacity: 1;
+  border-radius: 25px;
+  box-shadow:
+    -2px -2px 10px #fff,
+    2px 2px 10px #fff,
+    0 0 20px #fff,
+    0 0 40px #fff,
+    0 0 60px #fff,
+    0 0 80px #fff,
+    0 0 100px #fff;
+
 }
 
 
@@ -34,12 +77,13 @@
   max-width: 100%;
 }
 
-.column {
-    float: left;
-    width: 50%;
+
+.quiz-item-two {
+  position: absolute;
+  left:50%;
+  padding-top: 10px;
+  width: 80%;
 }
-
-
 
 
 html {
@@ -92,9 +136,9 @@ button {
   text-align: center;
   width: 130px;
   border-radius:40px;
-  background: #fff;
-  border: 2px solid #A239CA;
-  color:#A239CA;
+  background: #fff; opacity: 0.8;
+  border: 2px solid #241c3a;
+  color:#241c3a;
   letter-spacing:1px;
   text-shadow:0;
   font:{
@@ -105,7 +149,7 @@ button {
   transition: all 0.25s ease;
   &:hover {
     color:white;
-    background: #A239CA;
+    background: #241c3a;
   }
   &:active {
     //letter-spacing: 2px;
@@ -120,21 +164,21 @@ button {
   border-color:gray;
   border-width:3px;
   font-size:0;
-  border-left-color:#A239CA;
+  border-left-color:#241c3a;
   animation: rotating 2s 0.25s linear infinite;
 
   &:after {
     content:"";
   }
   &:hover {
-    color:#A239CA;
+    color:#241c3a;
     background: white;
   }
 }
 .validate {
   font-size:13px;
   color: white;
-  background: #A239CA;
+  background: #241c3a;
   &:after {
     font-family:'FontAwesome';
     content:"\f00c";

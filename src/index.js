@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const cocktailUrl = `http://localhost:3000/api/v1/cocktails`
   const ingredientUrl = `http://localhost:3000/api/v1/ingredients`
+  const neonHeader = document.querySelector('.neon_text')
   const navBox = document.querySelector('.navigation')
   const pageBody = document.querySelector('.main')
   const aboutPage = document.querySelector('.about')
@@ -9,6 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
   let ingredients = []
 
   // ------------------------- LISTENERS ------------------------------------
+
+    neonHeader.addEventListener('click', (event) => {
+      resetHomepage()
+    })
 
     navBox.addEventListener('click', (event) => {
     if (event.target.className === "test-btn") {
@@ -85,8 +90,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startQuiz() {
       console.log("selected start quiz");
-      aboutPage.hidden = true
-      quizPage.hidden = false
+      pageBody.innerHTML = `
+        <div class="quiz-container">
+          <div class="quiz-item-one">
+            <div id="loader">
+                <div id="lemon"></div>
+                <div id="straw"></div>
+                <div id="glass">
+                    <div id="cubes">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    <div id="drink"></div>
+                    <span id="counter"></span>
+                </div>
+                <div id="coaster"></div>
+                <footer>Please wait while we fill up your glass...</footer>
+            </div>
+          </div>
+          <div class="quiz-item-two">
+          <p class="item-about about">quiz here<br><br>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud </p>
+          </div>
+        </div>
+      `
     } // end of startQuiz
 
 
@@ -228,6 +257,36 @@ document.addEventListener('DOMContentLoaded', () => {
         })
       })
     } // end of finishCocktail
+
+
+  function resetHomepage() {
+    pageBody.innerHTML = `
+        <p class="item-about about">ABOUT Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+        <div class="row quiz" hidden>
+          <div class="column">
+            <div id="loader">
+                <div id="lemon"></div>
+                <div id="straw"></div>
+                <div id="glass">
+                    <div id="cubes">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    <div id="drink"></div>
+                    <span id="counter"></span>
+                </div>
+                <div id="coaster"></div>
+            </div>
+            <footer>Please wait while<br>we fill up your glass...</footer>
+          </div>
+          <div class="column">
+
+          </div>
+        </div>
+    `
+  }
 
 }); // end of DOMContentLoaded
 
