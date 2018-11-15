@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const quizPage = document.querySelector('.quiz')
   let ingredients
   let quizBoxListenerOn = false
-
+  let score
   // ------------------------- LISTENERS ------------------------------------
 
     neonHeader.addEventListener('click', (event) => {
@@ -72,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // ------------------------- functions for study cocktail path ------------
 
     function studyRecipes(){
+      let allCardsDiv
       console.log("selected study recipes");
       fetch(cocktailUrl)
       .then(resp => resp.json())
@@ -83,31 +84,39 @@ document.addEventListener('DOMContentLoaded', () => {
         // TODO -- once data is seeded, start with one recipe, then add next button to go through.
         })
       })
-      handleStudyPage()
+
     } // end of studyRecipes
 
-    function handleStudyPage() {
-
-    }
-
     function renderOneCocktail(cocktail) {
+      // <p class="study-ingredients">
+      // <button id="button" class="flip-btn gone">
+      // Flip
+      // </button>
+      // <button id="button" class="delete-btn gone">
+      // Hide
+      // </button>
+      // <button id="button" class="delete-btn gone">
+      // Delete
+      // </button>
+      // </p>
       pageBody.innerHTML += `
-        <div class="item" >
-          <p class="study-ingredients">
-            <button id="button" class="delete-btn gone">
-            Hide
-            </button>
-
-            <button id="button" class="delete-btn gone">
-            Delete
-            </button>
-          </p>
-          <h2 class="name">${cocktail.name}</h2>
-          <p class="study-ingredients">${renderRecipeIngredients(cocktail)}</p>
-          <p class="instructions">${cocktail.instructions}</p>
+        <div class="item">
+              <h2 class="name">${cocktail.name}</h2>
+              <p class="study-ingredients">${renderRecipeIngredients(cocktail)}</p>
+              <p class="instructions">${cocktail.instructions}</p>
         </div>
       `
+      // handleFlipping()
     } // end of renderOneCocktail
+
+    // function handleFlipping() {
+    //   pageBody.addEventListener('click', ()=>{
+    //     if (event.target.className === "flipper") {
+    //       console.log('clicked');
+    //     }
+    //     // debugger
+    //   })
+    // }
 
     function renderRecipeIngredients(cocktail) {
       let ingredientList = []
@@ -152,9 +161,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function startRound() {
       let remainingQuizDrinks = []
       let round = 1
-      let score = 0
       let winningCocktail = null
       let roundIngredients = []
+      score = 0
 
       allDatabaseCocktails
       winningCocktail = chooseRandom(cocktails)
@@ -169,6 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
       })
 
       renderRound(remainingQuizDrinks, winningCocktail, roundIngredients, round, score)
+      // pourDrink(50)
     } // end of startRound
 
     function nextRound(round, score, remainingQuizDrinks) {
@@ -193,7 +203,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const quizBox = document.querySelector('.item-about')
       quizBox.innerHTML = `
           <h2>${winningCocktail.name}</h2>
-          <p>Choose all ingredients:</p>
           <div class="answer-container">
           ${renderAnswerButtons(roundIngredients)}
           </div>
