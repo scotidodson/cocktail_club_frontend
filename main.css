@@ -12,6 +12,58 @@ body {
     /* text-align: center; */
 }
 
+h2 {
+	font-family: 'Bungee Inline', cursive;
+	font-weight: normal;
+  text-align: center;
+  letter-spacing: 1.5px;
+	color: #f2f2f2;
+}
+
+h2.name {
+  font-size: 2em !important;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+  font-weight: normal;
+  text-align: left;
+  padding-top: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  letter-spacing: 1.5px;
+  /* left:15%; */
+  /* margin-left: 20%; */
+}
+p.study-ingredients {
+  color: #12727c !important;
+  text-align: center !important;
+  font-family: 'Glegoo', serif !important;
+}
+
+p.instructions {
+    vertical-align: text-bottom
+    !important;
+    padding-bottom: 5px !important;
+}
+
+h4 {
+	font-family: 'helvetica', sans-serif;
+	font-weight: normal;
+  text-align: center;
+  letter-spacing: 1px;
+	color: #f2f2f2;
+}
+
+h3 {
+	font-family: 'helvetica', sans-serif;
+	font-weight: normal;
+  text-align: center;
+  letter-spacing: 1px;
+	color: #f2f2f2;
+}
+
 .navigation {
   text-align: center;
   padding-bottom: 4%;
@@ -19,22 +71,29 @@ body {
 
 .container {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   flex-direction: row;
   flex-wrap: wrap;
-  align-content: center;
   align-items: stretch;
 }
 
 .item {
   flex: none;
-  width: 35%;
-  max-height: auto;
-  min-height: 300px;
-  padding: 30px;
-  margin: 15px;
+  width: 30%;
+  /* min-height: 400px; */
+  height: auto;
+  width: 50%
+  /* width: 400px; */
+  padding: 10px;
+  padding-left: 30px;
+  padding-right: 25px;
+
+  margin-bottom: 40px;
+  margin-left: 20px;
+  margin-right: 20px;
+
   vertical-align: top;
-  align-content: space-between;
+  /* align-content: space-between; */
   /* background: #f2f2f2;
   border-radius: 25px; */
   background: #111616; opacity: 0.5;
@@ -58,8 +117,9 @@ body {
   padding: 25px;
   margin: 10px;
   vertical-align: top;
+  text-align: center;
   align-content: space-between;
-  background: #111616; opacity: 0.5;
+  background: #111616;
   color: #f2f2f2; opacity: 1;
   border-radius: 25px;
   box-shadow:
@@ -70,7 +130,28 @@ body {
     0 0 60px #0e4e54,
     0 0 80px #0e4e54,
     0 0 100px #0e4e54;
+}
 
+.item-homepage {
+  flex: none;
+  width: 75%;
+  max-height: auto;
+  padding: 25px;
+  margin: 10px;
+  vertical-align: top;
+  text-align: center;
+  align-content: space-between;
+  background: #111616;
+  color: #f2f2f2; opacity: 1;
+  border-radius: 25px;
+  box-shadow:
+    -2px -2px 10px #fff,
+    2px 2px 10px #fff,
+    0 0 20px #0e4e54,
+    0 0 40px #0e4e54,
+    0 0 60px #0e4e54,
+    0 0 80px #0e4e54,
+    0 0 100px #0e4e54;
 }
 
 
@@ -91,7 +172,7 @@ body {
 
 .quiz-item-two {
   position: absolute;
-  left:50%;
+  left:45%;
   padding-top: 10px;
   width: 80%;
 }
@@ -110,7 +191,13 @@ h1 {
 	font-size: 3.7em;
 	line-height: 1.2em;
 	color: rgba(255,255,255,1);
-  padding-top: 4%;
+  /* padding-top: 4%; */
+}
+
+img {
+    border-radius: 50%;
+    width: 20%;
+    height: auto;
 }
 
 .neon_text {
@@ -124,77 +211,40 @@ h1 {
 		0 0 100px #4717F6;
 }
 
-
-/* BUTTONS */
-
-
-* {
-  font-family: 'Roboto', sans-serif;
-}
-/* .btn-container {
-  position: absolute;
-  top:50%;
-  left:50%;
-  margin-left: -65px;
-  margin-top: -20px;
-  width: 130px;
-  height: 40px;
-  text-align: center;
-} */
 button {
+  font-family: "helvetica", sans-serif;
   outline:none;
-  height: 40px;
+  height: 50px;
   text-align: center;
   width: 130px;
-  border-radius:40px;
+  border-radius:25px;
   background: #fff;
   border: 2px solid #241c3a;
   color:#241c3a;
   letter-spacing:1px;
   text-shadow:0;
+
   font:{
     size:12px;
     weight:bold;
+    }
   }
-  cursor: pointer;
-  transition: all 0.25s ease;
-  &:hover {
-    color:white;
-    background: #241c3a;
-  }
-  &:active {
-    //letter-spacing: 2px;
-    letter-spacing: 2px ;
-  }
-  &:after {
-    content:"SUBMIT";
-  }
-}
-.onclic {
-  width: 40px;
-  border-color:gray;
-  border-width:3px;
-  font-size:0;
-  border-left-color:#241c3a;
-  animation: rotating 2s 0.25s linear infinite;
 
-  &:after {
-    content:"";
+  button.picked {
+    background-color: #2F6D76 !important;
+    color: #fff !important;
   }
-  &:hover {
-    color:#241c3a;
-    background: white;
+
+  button.gone {
+    background-color: #2F6D76;
+    color: #fff;
+    height: 20px;
+    width: 60px;
+    border-radius:5%;
+    margin-right: 5px;
+      border: 1.5px solid #969696;
+
   }
-}
-.validate {
-  font-size:13px;
-  color: white;
-  background: #241c3a;
-  &:after {
-    font-family:'FontAwesome';
-    content:"\f00c";
-  }
-}
 
 @keyframes rotating {
   from {

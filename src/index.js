@@ -30,12 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (event.target.className === "new-cocktail-form") {
       console.log("got it");
       let nameInput = document.querySelector('input[name="name"]').value
-      // let instructionInput = document.querySelector('input[name="instructions"]').value
-      // let amountInputs = document.querySelectorAll('input[name="amount"]')
-      // let ingredientInputs = document.querySelectorAll('input[name="ingredient"]')
-      // debugger
       addCustomCocktailName(nameInput)
-      // returns newCocktailNum
     }
   })
 
@@ -88,14 +83,28 @@ document.addEventListener('DOMContentLoaded', () => {
         // TODO -- once data is seeded, start with one recipe, then add next button to go through.
         })
       })
+      handleStudyPage()
     } // end of studyRecipes
+
+    function handleStudyPage() {
+
+    }
 
     function renderOneCocktail(cocktail) {
       pageBody.innerHTML += `
-        <div class="item"</div>
-          <h3>${cocktail.name}</h3>
-          <ul>${renderRecipeIngredients(cocktail)}</ul>
-          <p>${cocktail.instructions}</p>
+        <div class="item" >
+          <p class="study-ingredients">
+            <button id="button" class="delete-btn gone">
+            Hide
+            </button>
+
+            <button id="button" class="delete-btn gone">
+            Delete
+            </button>
+          </p>
+          <h2 class="name">${cocktail.name}</h2>
+          <p class="study-ingredients">${renderRecipeIngredients(cocktail)}</p>
+          <p class="instructions">${cocktail.instructions}</p>
         </div>
       `
     } // end of renderOneCocktail
@@ -103,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderRecipeIngredients(cocktail) {
       let ingredientList = []
       cocktail.ingredients.forEach((ingredientHash)=>{
-        ingredientList.push(`<li>${ingredientHash.amount} ${ingredientHash.ingredient}</li>`)
+        ingredientList.push(`${ingredientHash.amount} ${ingredientHash.ingredient}<br>`)
       })
       return ingredientList.join('')
     } // end of renderRecipeIngredients
@@ -128,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span id="counter"></span>
                 </div>
                 <div id="coaster"></div>
-                <footer>Please wait while we fill up your glass...</footer>
+                <footer>I'll pour you a drink if you can tell me what's in it...</footer>
             </div>
           </div>
           <div class="quiz-item-two">
@@ -184,11 +193,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const quizBox = document.querySelector('.item-about')
       quizBox.innerHTML = `
           <h2>${winningCocktail.name}</h2>
-          <p>Choose all ingredients & submit your response.</p>
+          <p>Choose all ingredients:</p>
           <div class="answer-container">
           ${renderAnswerButtons(roundIngredients)}
           </div>
-          <button class="check-answers" type="button" value="submit">...right?</button>
+          <br>
+          <button class="check-answers" type="button" value="submit">Put it on my tab?</button>
 
         `
       handleResponse(remainingQuizDrinks, winningCocktail, roundIngredients, round, score, quizBox)
@@ -319,8 +329,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function toggleClass(event) {
       if (event.target.id === "not-selected") {
         event.target.setAttribute("id", "selected")
+        event.target.setAttribute("class", "answer-item picked")
       } else {
         event.target.setAttribute("id", "not-selected")
+        event.target.setAttribute("class", "answer-item")
       }
     } // end of toggleClass
 
@@ -515,30 +527,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function resetHomepage() {
     pageBody.innerHTML = `
-        <p class="item-about about">ABOUT Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-        <div class="row quiz" hidden>
-          <div class="column">
-            <div id="loader">
-                <div id="lemon"></div>
-                <div id="straw"></div>
-                <div id="glass">
-                    <div id="cubes">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>
-                    <div id="drink"></div>
-                    <span id="counter"></span>
-                </div>
-                <div id="coaster"></div>
-            </div>
-            <footer>Please wait while<br>we fill up your glass...</footer>
-          </div>
-          <div class="column">
-
-          </div>
-        </div>
+    <div class="item-homepage">
+      <h2 >Test your cocktail knowledge with the bartender</h2>
+      <h4>Fill your glass to win her over and achieve regular status.</h4>
+      <img src="images/cocktail.png" alt="cocktail image">
+      <h4>Don't let your glass reach empty...</h4>
+      <h4>You'll be too embarassed to return and probably end up crying on the subway.</h4>
+      <h2> Cheers!</h2>
+    </div>
     `
   }
 
