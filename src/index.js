@@ -6,8 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const pageBody = document.querySelector('.main')
   const aboutPage = document.querySelector('.about')
   const quizPage = document.querySelector('.quiz')
-  let cocktails
-  let ingredients = []
+  let ingredients
 
   // ------------------------- LISTENERS ------------------------------------
 
@@ -41,16 +40,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ------------------------- HELPER FUNCTIONS -----------------------------
 
-    function getIngredients() {
-      fetch(ingredientUrl)
+    const allDatabaseCocktails = function fetchCocktails() {
+      fetch(cocktailUrl)
       .then(resp => resp.json())
-      .then(ingredientData => {
-        ingredientData.forEach(ingredientHash =>{
-          ingredients.push(ingredientHash.ingredient)
-        }) // end of forEach
-      }) // end of fetch
-      return ingredients
-    } // end of getIngredients
+      .then(cocktailData => {
+        cocktails = cocktailData
+        return cocktails
+        })
+    }() // end of fetchCocktails
+
+    function shuffle(array) {
+      let currentIndex = array.length, temporaryValue, randomIndex;
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+      return array;
+    } // end of shuffle
+
+    function chooseRandom(array) {
+      let thisOne
+      thisOne = array[Math.floor(Math.random() * array.length)]
+      return thisOne
+    } // end of chooseRandom
 
   // ------------------------- functions for study cocktail path ------------
 
@@ -62,9 +83,9 @@ document.addEventListener('DOMContentLoaded', () => {
         cocktails = cocktailData
         pageBody.innerHTML = ""
         cocktails.forEach((cocktail) => {
-          renderOneCocktail(cocktail)
-        })
+        renderOneCocktail(cocktail)
         // TODO -- once data is seeded, start with one recipe, then add next button to go through.
+        })
       })
     } // end of studyRecipes
 
@@ -89,6 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // ------------------------ functions for quiz path -----------------------
 
     function startQuiz() {
+      let round = 0
+      let score = 0
       console.log("selected start quiz");
       pageBody.innerHTML = `
         <div class="quiz-container">
@@ -110,14 +133,199 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           </div>
           <div class="quiz-item-two">
-          <p class="item-about about">quiz here<br><br>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud </p>
+            <div class="item-about about">
+            </div>
           </div>
         </div>
       `
+      startRound(round, score)
     } // end of startQuiz
 
+    function startRound(round, score) {
+      let winningCocktail
+      let roundIngredients
+      let remainingQuizDrinks = []
+      round++
+
+      allDatabaseCocktails
+      winningCocktail = chooseRandom(cocktails)
+      roundIngredients = getRoundIngredients(cocktails, winningCocktail)
+          console.log("startRound roundIngredients:");
+          console.log(roundIngredients);
+
+      // remove drink from options
+      cocktails.forEach(c=>{
+        if (c.id != winningCocktail.id) {
+          remainingQuizDrinks.push(c)
+        }
+      })
+
+      renderRound(remainingQuizDrinks, winningCocktail, roundIngredients, round, score)
+    } // end of startRound
+
+    function renderRound(remainingQuizDrinks, winningCocktail, roundIngredients, round, score) {
+      console.log('now in render stage');
+      // console.log(remainingQuizDrinks);
+      // console.log(winningCocktail.name);
+      // console.log(roundIngredients);
+      // console.log(round);
+      const quizBox = document.querySelector('.item-about')
+      quizBox.innerHTML = `
+          <h2>${winningCocktail.name}</h2>
+          <p>Choose all ingredients & submit your response.</p>
+          <div class="answer-container">
+          ${renderAnswerButtons(roundIngredients)}
+          </div>
+          <button class="check-answers" type="button" value="submit">...right?</button>
+
+        `
+      handleResponse(remainingQuizDrinks, winningCocktail, roundIngredients, round, score, quizBox)
+    } // end of renderRound
+
+    function renderAnswerButtons(roundIngredients) {
+      let answerButtons = []
+      roundIngredients.forEach(i => {
+        answerButtons.push(`<button class="answer-item" id="not-selected" data-name="${i}" data-type="ingredient" data-selected="false">${i}</button>`)
+      })
+      return answerButtons.join('')
+    } // end of renderAnswerButtons
+
+    function handleResponse(remainingQuizDrinks, winningCocktail, roundIngredients, round, score, quizBox) {
+      let selected = []
+      let selectedNames = []
+
+      quizBox.addEventListener('click', (event)=>{
+        console.log("clicked:")
+        console.log(event.target);
+        // event.target.setAttribute("class", "selected")
+        if (event.target.className === "check-answers") {
+          console.log('need to submit');
+          selected = Array.from(event.target.parentElement.querySelectorAll('#selected'))
+            selected.forEach(element => {
+              selectedNames.push(element.dataset.name)
+            })
+            selectedNames.sort()
+          submitResponse(remainingQuizDrinks, winningCocktail, round, score, quizBox, selectedNames)
+          // TODO -- throw error and restart if zero selected
+        } else if (event.target.dataset.type === "ingredient") {
+            console.log('clicked an ingredient')
+            console.log(event.target.dataset.selected);
+            toggleTrueFalse(event)
+        }
+      })
+    } // handleResponse
+
+    function submitResponse(remainingQuizDrinks, winningCocktail, round, score, quizBox, selectedNames) {
+      let correct = []
+      let winner = false
+      console.log('submitting response');
+      console.log(selectedNames);
+
+      winningCocktail.ingredients.forEach(iHash => {
+        correct.push(iHash.ingredient)
+      })
+      correct.sort()
+
+      // debugger
+      if (winner) {
+        score += 10
+        quizBox.innerHTML = `
+        <h2>${winningCocktail.name}</h2>
+        <p>You got it!</p>
+        <ul>${renderRecipeIngredients(winningCocktail)}</ul>
+        <p>${winningCocktail.instructions}</p>
+        <button class="next-round" type="button" value="submit">Another Round</button>
+        `
+      } else {
+        score -= 10
+        quizBox.innerHTML = `
+        <h2>${winningCocktail.name}</h2>
+        <p>WRONG</p>
+        <p>You chose: ${selectedNames.join(', ')}</p>
+        <p>Try this instead...</p>
+        <ul>${renderRecipeIngredients(winningCocktail)}</ul>
+        <p>${winningCocktail.instructions}</p>
+        <button class="next-round" type="button" value="submit">Another Round</button>
+        `
+      }
+      console.log(`round: ${round} score: ${score}`);
+      handleEndOfRound(remainingQuizDrinks, round, score, quizBox, selectedNames)
+    } // end of submitResponse
+
+    function handleEndOfRound(remainingQuizDrinks, round, score, quizBox, selectedNames) {
+
+    }
+
+    function toggleTrueFalse(event) {
+      // if (event.target.dataset.selected = "false") {
+      //   event.target.dataset.selected = "true"
+      // } else {
+      //   event.target.dataset.selected = "false"
+      // }
+      if (event.target.dataset.selected === "false") {
+        event.target.dataset.selected = "true"
+      } else {
+        event.target.dataset.selected = "false"
+      }
+      toggleClass(event)
+    } // end of toggleTrueFalse
+
+    function toggleClass(event) {
+      if (event.target.id === "not-selected") {
+        event.target.setAttribute("id", "selected")
+      } else {
+        event.target.setAttribute("id", "not-selected")
+      }
+    } // end of toggleClass
+
+    function getRoundIngredients(cocktailArray, chosenDrink) {
+      let roundIngredients = []
+      let uniqRoundIngredients = []
+      let allIngredientNames = []
+      let uniqIngredients = []
+      let shuffledIngredients = []
+      let correctIngredients = []
+      // get correct ingredients
+          chosenDrink.ingredients.forEach(iHash => {
+            correctIngredients.push(iHash.ingredient)
+          })
+
+      // get all ingredients
+          cocktailArray.forEach(c => {
+              c.ingredients.forEach(iHash => {
+                allIngredientNames.push(iHash.ingredient)
+              })
+          })
+
+      // get unique names
+          uniqIngredients = [...new Set(allIngredientNames)]
+      // shuffle unique names
+          shuffledIngredients = shuffle(uniqIngredients)
+
+      // add correct to round & ensure unique vals
+          roundIngredients = combineWinningWithRandom(correctIngredients, shuffledIngredients)
+          uniqRoundIngredients = [...new Set(roundIngredients)]
+            // TO DO this will not insure a set of 12 options each time.... need to fix
+
+      return roundIngredients
+    } // end of getRoundIngredients
+
+    function combineWinningWithRandom(correctIngredients, shuffledIngredients) {
+      let number
+      let options = []
+      let shuffledOptions = []
+        console.log("correct:");
+        console.log(correctIngredients);
+      options = [...correctIngredients]
+      number = (12 - correctIngredients.length)
+
+      for (let i = 0; i < number; i++) {
+        options.push(shuffledIngredients[i])
+      }
+
+      shuffledOptions = shuffle(options)
+      return shuffledOptions
+    } // end of combineWinningWithRandom
 
   // ------------------------ functions for adding a custom cocktail --------
 
@@ -293,9 +501,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
-
-
 // function renderIngredientForm() {
   //   getIngredients()
   //   let ingredientForm = `
@@ -315,3 +520,25 @@ document.addEventListener('DOMContentLoaded', () => {
         //   })
         //   return ingredientDropdown.join('')
         // } // end of getIngredientDropdowns
+
+
+// const allIngredients = function fetchIngredients() {
+  //
+  //   fetch(ingredientUrl)
+  //   .then(resp => resp.json())
+  //   .then(ingredientData => {
+    //     ingredients = ingredientData
+    //     return ingredients
+    //     // debugger
+    //   }) // end of fetch
+    // }() // end of getIngredients
+
+
+
+  // function cleanIngredients(allIngredients) {
+  //   allIngredients.forEach(ingredientHash =>{
+  //     ingredients.push(ingredientHash.ingredient)
+  //   }) // end of forEach
+  //   uniqIngredients = [...new Set(ingredients)]
+  //   return uniqIngredients
+  // }
