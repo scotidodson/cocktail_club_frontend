@@ -195,6 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
       round = 1
       score = 50
       adjustDrinkLevel(score)
+
       roundToRender(round, score, remainingQuizDrinks)
     } // end of startQuiz
 
@@ -306,11 +307,8 @@ document.addEventListener('DOMContentLoaded', () => {
     } // end of submitResponse
 
     function adjustDrinkLevel(score) {
-      let level
-      let current
-      current = parseInt(drinkStyle.top)
-      level = 100-score
-
+      let level = 100 - score
+      //let current = parseInt(drinkStyle.top) || 50
       if (score == 100) {
         level = 5
         strawStyle.opacity = .8
@@ -400,8 +398,6 @@ document.addEventListener('DOMContentLoaded', () => {
       // add correct to round & ensure unique vals
           roundIngredients = combineWinningWithRandom(correctIngredients, shuffledIngredients)
           uniqRoundIngredients = [...new Set(roundIngredients)]
-          console.log('unique starts - ');
-          console.log(uniqRoundIngredients);
       // back to 12 if needed
           if (uniqRoundIngredients.length < 12) {
             let need = null
@@ -414,9 +410,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             uniqRoundIngredients = shuffle(uniqRoundIngredients)
           }
-          console.log('then');
-          console.log(uniqRoundIngredients);
-
       return uniqRoundIngredients
     } // end of getRoundIngredients
 
