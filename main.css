@@ -265,14 +265,14 @@ button {
     color: #fff !important;
   }
 
-  button.gone {
+  button#gone {
     background-color: #2F6D76;
     color: #fff;
-    height: 20px;
-    width: 60px;
-    border-radius:5%;
+    height: 50px;
+    width: 50px;
+    border-radius:50%;
     margin-right: 5px;
-      border: 1.5px solid #969696;
+      border: 1.5px solid #111616;
   }
 
   /* button.score {

@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const formPage = document.querySelector('.form-page')
   const quizBox = document.querySelector('.quiz-prompt')
 
+  const drinkFooter = document.querySelector('footer')
   const drinkDiv = document.querySelector('#drink')
   const drinkStyle = drinkDiv.style
 
@@ -26,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let falseIngredients = ["Bacon", "Butter", "Eucalyptus", "Paprika", "Matcha", "Camel's Milk"]
   let score
   let round
+  let cocktailClicked
+  
   // ------------------------- LISTENERS ------------------------------------
 
     neonHeader.addEventListener('click', (event) => {
@@ -49,7 +52,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 
-    // studyPage.addEventListener('click', handleFlipping(event))
+    studyPage.addEventListener('click', ()=>{
+      if (event.target.className === "hide-btn") {
+        cocktailClicked = event.target.dataset.id
+        event.target.parentElement.parentElement.parentElement.hidden = true
+      } else if (event.target.className === "delete-btn") {
+        cocktailClicked = event.target.dataset.id
+        event.target.parentElement.parentElement.parentElement.hidden = true
+        cocktailClicked = parseInt(cocktailClicked)
+        deleteCocktail(cocktailClicked)
+      }
+    })
 
     pageBody.addEventListener('submit', (event) => {
     event.preventDefault()
@@ -149,36 +162,37 @@ document.addEventListener('DOMContentLoaded', () => {
     } // end of studyRecipes
 
     function renderOneCocktail(cocktail) {
-      // <p class="study-ingredients">
-      // <button id="button" class="flip-btn gone">
-      // Flip
-      // </button>
-      // <button id="button" class="delete-btn gone">
-      // Hide
-      // </button>
-      // <button id="button" class="delete-btn gone">
-      // Delete
-      // </button>
-      // </p>
       studyPage.innerHTML += `
-        <div class="item">
-          <div class="recipe-front">
-              <h2 class="name">${cocktail.name}</h2>
+        <div class="item" data-id="${cocktail.id}">
+          <div class="recipe-front" data-id="${cocktail.id}">
+              ${returnCardButtons(cocktail)}
+              <h2 class="name" data-id="${cocktail.id}">${cocktail.name}</h2>
           </div>
-          <div class="recipe-back" >
-              <p class="study-ingredients">${renderRecipeIngredients(cocktail)}</p>
-              <p class="instructions">${cocktail.instructions}</p>
+          <div class="recipe-back" data-id="${cocktail.id}">
+              <p class="study-ingredients" data-id="${cocktail.id}">${renderRecipeIngredients(cocktail)}</p>
+              <p class="instructions" data-id="${cocktail.id}">${cocktail.instructions}</p>
           </div>
         </div>
       `
     } // end of renderOneCocktail
 
     // function handleFlipping(event) {
-    //   if (event.target.className === "recipe-front") {
-    //       event.target.hidden = !event.target.hidden
-    //   }
-    //   debugger
+    //   console.log(event.target);
     // }
+
+    function returnCardButtons(cocktail) {
+      return `<p class="study-ingredients">
+      <button id="gone" class="hide-btn" data-id="${cocktail.id}">
+      //
+      </button>
+      <button id="gone" class="delete-btn" data-id="${cocktail.id}">
+      x
+      </button>
+      </p>`
+      // <button id="gone" class="hide-btn" data-id="${cocktail.id}">
+      // //
+      // </button>
+    } // end of returnCardButtons
 
     function renderRecipeIngredients(cocktail) {
       let ingredientList = []
@@ -187,6 +201,13 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       return ingredientList.join('')
     } // end of renderRecipeIngredients
+
+    function deleteCocktail(cocktailClicked) {
+
+      fetch(`http://localhost:3000/api/v1/cocktails/${cocktailClicked}`, {
+        method: "DELETE"
+      })
+    }
 
   // ------------------------ functions for quiz path -----------------------
 
@@ -314,9 +335,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (score == 100) {
         level = 5
         strawStyle.opacity = .8
-      }
-      if (score == 0) {
+      } else if (score == 10){
+        drinkFooter.innerHTML = ""
+        drinkFooter.innerHTML = "You're almost out..."
+      } else if (score == 0) {
         lemonStyle.display = "none"
+        drinkFooter.innerHTML = "No more for you."
+      }
+
+      if (level == 80 || level == 50) {
+        drinkFooter.innerHTML = "I'll pour more...<br>if you can tell me what's in it."
       }
 
       changer = setInterval(()=>{
@@ -329,7 +357,7 @@ document.addEventListener('DOMContentLoaded', () => {
           } else if (level === current) {
             clearInterval(changer)
           }
-      }, 50)
+      }, 20)
 
       // drinkStyle.top = `${level}%`
     } // end of adjustDrinkLevel
@@ -349,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <h2>You're cut off! Get out.</h2>
           <button class="play-again" type="button" value="submit">Play Again</button>
           `
-          handleEndOfGame(quizBox)
+          handleEndOfGame()
         } else {
           nextRound(round, score, remainingQuizDrinks)
         }
