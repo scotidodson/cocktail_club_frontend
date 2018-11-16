@@ -4,11 +4,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const neonHeader = document.querySelector('.neon_text')
   const navBox = document.querySelector('.navigation')
   const pageBody = document.querySelector('.main')
-  const aboutPage = document.querySelector('.item-homepage')
+  const aboutPage = document.querySelector('#about-page')
   const quizPage = document.querySelector('.quiz-page')
   const studyPage = document.querySelector('.study-page')
   const formPage = document.querySelector('.form-page')
   const quizBox = document.querySelector('.quiz-prompt')
+  const drinkDiv = document.querySelector('#drink')
+  const drinkStyle = drinkDiv.style
+  const lemon = document.querySelector('#lemon')
+  const lemonStyle = lemon.style
+  const straw = document.querySelector('#straw')
+  const strawStyle = straw.style
   let ingredients
   let quizBoxListenerOn = false
   let score
@@ -20,11 +26,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     navBox.addEventListener('click', (event) => {
     if (event.target.className === "test-btn") {
+      toggleView(quizPage)
       startQuiz()
     } else if (event.target.className === "study-btn") {
+      toggleView(studyPage)
       studyRecipes()
     } else if (event.target.className === "create-btn") {
-      showNewCocktailForm()
+      toggleView(formPage)
     }
   })
 
@@ -48,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
       addCustomCocktailName(nameInput)
     }
   })
+
 
   // ------------------------- HELPER FUNCTIONS -----------------------------
 
@@ -78,31 +87,59 @@ document.addEventListener('DOMContentLoaded', () => {
       return array;
     } // end of shuffle
 
-    function chooseRandom(array) {
+    function chooseRandom(array, remainingQuizDrinks) {
       let thisOne
       thisOne = array[Math.floor(Math.random() * array.length)]
+        if (remainingQuizDrinks.length > 0) {
+          if (remainingQuizDrinks.includes(thisOne)) {
+            chooseRandom(array, remainingQuizDrinks)
+          }
+        }
       return thisOne
     } // end of chooseRandom
+
+    function toggleView(pageToShow) {
+      switch (pageToShow) {
+        case quizPage:
+        aboutPage.hidden = true
+        quizPage.hidden = false
+        studyPage.hidden = true
+        formPage.hidden = true
+          break;
+        case studyPage:
+        aboutPage.hidden = true
+        quizPage.hidden = true
+        studyPage.hidden = false
+        formPage.hidden = true
+          break;
+        case formPage:
+        aboutPage.hidden = true
+        quizPage.hidden = true
+        studyPage.hidden = true
+        formPage.hidden = false
+          break;
+        default:
+        aboutPage.hidden = false
+        quizPage.hidden = true
+        studyPage.hidden = true
+        formPage.hidden = true
+      }
+    } // end of toggleView
 
   // ------------------------- functions for study cocktail path ------------
 
     function studyRecipes(){
       let allCardsDiv
-      console.log("selected study recipes");
-      fetch(cocktailUrl)
-      .then(resp => resp.json())
-      .then(cocktailData => {
-        cocktails = cocktailData
-        aboutPage.hidden = true
-        quizPage.hidden = true
-        formPage.hidden = true
-        studyPage.hidden = false
-        cocktails.forEach((cocktail) => {
-        renderOneCocktail(cocktail)
-        // TODO -- once data is seeded, start with one recipe, then add next button to go through.
+        fetch(cocktailUrl)
+        .then(resp => resp.json())
+        .then(cocktailData => {
+          cocktails = cocktailData
+          toggleView(studyPage)
+            cocktails.forEach((cocktail) => {
+            renderOneCocktail(cocktail)
+            // TODO -- once data is seeded, start with one recipe, then add next button to go through.
+            })
         })
-      })
-
     } // end of studyRecipes
 
     function renderOneCocktail(cocktail) {
@@ -147,46 +184,29 @@ document.addEventListener('DOMContentLoaded', () => {
   // ------------------------ functions for quiz path -----------------------
 
     function startQuiz() {
-      aboutPage.hidden = true
-      quizPage.hidden = false
-      studyPage.hidden = true
-      formPage.hidden = true
       let remainingQuizDrinks = []
       let round = 1
-      let winningCocktail = null
-      let roundIngredients = []
-      score = 0
-
-      allDatabaseCocktails
-      winningCocktail = chooseRandom(cocktails)
-      roundIngredients = getRoundIngredients(cocktails, winningCocktail)
-      cocktails.forEach(c=>{
-        if (c.id != winningCocktail.id) {
-          remainingQuizDrinks.push(c)
-        }
-      })
-
-      renderRound(remainingQuizDrinks, winningCocktail, roundIngredients, round, score)
-      // pourDrink(50)
+      score = 50
+      adjustDrinkLevel(score)
+      roundToRender(round, score, remainingQuizDrinks)
     } // end of startQuiz
 
     function nextRound(round, score, remainingQuizDrinks) {
-      let i = 0
       round++
-      roundIngredients = []
-
-      allDatabaseCocktails
-      winningCocktail = chooseRandom(cocktails)
-      roundIngredients = getRoundIngredients(cocktails, winningCocktail)
-
-      remainingQuizDrinks.forEach(c=>{
-        if (c.id = winningCocktail.id) {
-          remainingQuizDrinks.splice(i, 1)
-        }
-        i++
-      })
-      renderRound(remainingQuizDrinks, winningCocktail, roundIngredients, round, score)
+      roundToRender(round, score, remainingQuizDrinks)
     } // end of nextRound
+
+    function roundToRender(round, score, remainingQuizDrinks) {
+
+        let roundIngredients = []
+        let winningCocktail = null
+        allDatabaseCocktails
+        winningCocktail = chooseRandom(cocktails, remainingQuizDrinks)
+        roundIngredients = getRoundIngredients(cocktails, winningCocktail)
+        remainingQuizDrinks.push(winningCocktail)
+      toggleView(quizPage)
+      renderRound(remainingQuizDrinks, winningCocktail, roundIngredients, round, score)
+    } // end of roundToRender
 
     function renderRound(remainingQuizDrinks, winningCocktail, roundIngredients, round, score) {
       quizBox.innerHTML = `
@@ -197,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <br>
           <button class="check-answers" type="button" value="submit">Put it on my tab?</button>
         `
-      handleResponse(remainingQuizDrinks, winningCocktail, roundIngredients, round, score, quizBox)
+      handleResponse(remainingQuizDrinks, winningCocktail, roundIngredients, round, score)
     } // end of renderRound
 
     function renderAnswerButtons(roundIngredients) {
@@ -208,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return answerButtons.join('')
     } // end of renderAnswerButtons
 
-    function handleResponse(remainingQuizDrinks, winningCocktail, roundIngredients, round, score, quizBox) {
+    function handleResponse(remainingQuizDrinks, winningCocktail, roundIngredients, round, score) {
       let selected = []
       let selectedNames = []
       const checkMyAnswersBtn = document.querySelector('.check-answers')
@@ -221,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedNames.push(element.dataset.name)
           })
           selectedNames.sort()
-        submitResponse(remainingQuizDrinks, winningCocktail, round, score, quizBox, selectedNames)
+        submitResponse(remainingQuizDrinks, winningCocktail, round, score, selectedNames)
       })
 
       ingredientButtons.addEventListener('click', (event)=>{
@@ -233,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
       })
     } // handleResponse
 
-    function submitResponse(remainingQuizDrinks, winningCocktail, round, score, quizBox, selectedNames) {
+    function submitResponse(remainingQuizDrinks, winningCocktail, round, score, selectedNames) {
       let correct = []
       let winner = false
       console.log('submitting response');
@@ -274,18 +294,34 @@ document.addEventListener('DOMContentLoaded', () => {
         `
       }
       console.log(`round: ${round} score: ${score}`);
-      handleEndOfRound(remainingQuizDrinks, round, score, quizBox, selectedNames)
+      adjustDrinkLevel(score)
+      handleEndOfRound(remainingQuizDrinks, round, score, selectedNames)
     } // end of submitResponse
+
+    function adjustDrinkLevel(score) {
+      let level
+      level = 100-score
+      if (score == 100) {
+        level = 5
+        strawStyle.opacity = .8
+        // lemonStyle.display
+      }
+
+      if (score == 0) {
+        lemonStyle.display = "none"
+      }
+      drinkStyle.top = `${level}%`
+    }
 
                 // ** ------------------- add css change in this step +- 10 ^^^^
 
-    function handleEndOfRound(remainingQuizDrinks, round, score, quizBox, selectedNames) {
+    function handleEndOfRound(remainingQuizDrinks, round, score, selectedNames) {
       const nextRoundBtn = document.querySelector('.next-round')
       nextRoundBtn.addEventListener('click', (event) =>{
         if (score >= 100) {
           quizBox.innerHTML = `
           <h2>You've got a full glass!</h2>
-          <h2>Dude, you're great. I love when you come in.</h2>
+          <h2>You can sit at my bar any time.</h2>
           <button class="play-again" type="button" value="submit">Play Again</button>
           `
           handleEndOfGame(quizBox)
@@ -306,7 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
       playAgain.addEventListener('click', ()=>{
         startQuiz()
       })
-    }
+    } // end of handleEndOfGame
 
     function toggleTrueFalse(event) {
 
@@ -378,13 +414,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } // end of combineWinningWithRandom
 
   // ------------------------ functions for adding a custom cocktail --------
-
-    function showNewCocktailForm() {
-      aboutPage.hidden = true
-      quizPage.hidden = true
-      formPage.hidden = false
-      studyPage.hidden = true
-    } // showNewCocktailForm
 
     function addCustomCocktailName(nameInput){
       let newCocktail
@@ -515,10 +544,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   function resetHomepage() {
-    aboutPage.hidden = false
-    quizPage.hidden = true
-    formPage.hidden = true
-    studyPage.hidden = true
+    toggleView(aboutPage)
   }
 
 }); // end of DOMContentLoaded
+
+
+// $(document).ready(function(){
+//   let worker = null;
+//   let loaded = 0;
+//
+//   function increment(loaded) {
+//       $('#drink').css('top', (loaded)+'%');
+//       // if(loaded==10) $('#cubes div:nth-child(1)').fadeIn(100);
+//       // if(loaded==20) $('#cubes div:nth-child(2)').fadeIn(100);
+//       // if(loaded==30) $('#cubes div:nth-child(3)').fadeIn(100);
+//       // if(loaded==40) $('#cubes div:nth-child(3)').fadeIn(100);
+//       // if(loaded==50) $('#cubes div:nth-child(3)').fadeIn(100);
+//       // if(loaded==60) $('#cubes div:nth-child(3)').fadeIn(100);
+//       // if(loaded==70) $('#cubes div:nth-child(3)').fadeIn(100);
+//       // if(loaded==80) $('#cubes div:nth-child(3)').fadeIn(100);
+//       // if(loaded==90) $('#cubes div:nth-child(3)').fadeIn(100);
+//       if(loaded==95) {
+//           $('#lemon').fadeIn(100);
+//           $('#straw').fadeIn(300);
+//       }
+//   }
+//
+//   function startLoading(loaded) {
+//       $('#lemon').hide();
+//       $('#straw').hide();
+//       $('#cubes div').hide();
+//       increment(loaded)
+//   }
+//   function stopLoading() {
+//       clearInterval(worker);
+//   }
+//
+//   // startLoading(30);
+//
+// });
