@@ -19,11 +19,14 @@
     border-color: rgba(255,255,255,.7);
     overflow: hidden;
 }
+/* #cc9966 */
+/* #4327b2 */
 
 #drink {
     position: absolute;
     top:100%; right:0; bottom:0; left:0;
-    background: linear-gradient(to bottom, #cc9966, #4327b2, orangered) !important
+    background: linear-gradient(to bottom, #ffca96, #423960, #1f1254
+) !important
     ;
     box-shadow: inset 0 2px 1px rgba(255,69,0,.2);
     opacity: .6;

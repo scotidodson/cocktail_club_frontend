@@ -306,20 +306,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function adjustDrinkLevel(score) {
       let level
+      let current
+      current = parseInt(drinkStyle.top)
       level = 100-score
+
       if (score == 100) {
         level = 5
         strawStyle.opacity = .8
-        // lemonStyle.display
       }
-
       if (score == 0) {
         lemonStyle.display = "none"
       }
       drinkStyle.top = `${level}%`
-    }
+    } // end of adjustDrinkLevel
 
-                // ** ------------------- add css change in this step +- 10 ^^^^
 
     function handleEndOfRound(remainingQuizDrinks, round, score, selectedNames) {
       const nextRoundBtn = document.querySelector('.next-round')

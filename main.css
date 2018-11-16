@@ -200,7 +200,9 @@ h1 {
 
 img {
     border-radius: 50%;
-    width: 15%;
+    width: 25%;
+    margin: 0;
+    padding: 0;
     height: auto;
     opacity: 0.8;
 }
