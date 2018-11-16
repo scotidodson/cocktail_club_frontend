@@ -320,7 +320,6 @@ document.addEventListener('DOMContentLoaded', () => {
       drinkStyle.top = `${level}%`
     } // end of adjustDrinkLevel
 
-
     function handleEndOfRound(remainingQuizDrinks, round, score, selectedNames) {
       const nextRoundBtn = document.querySelector('.next-round')
       nextRoundBtn.addEventListener('click', (event) =>{
@@ -370,36 +369,39 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } // end of toggleClass
 
-    function getRoundIngredients(cocktailArray, chosenDrink) {
+    function getRoundIngredients(cocktails, winningCocktail) {
       let roundIngredients = []
       let uniqRoundIngredients = []
       let allIngredientNames = []
       let uniqIngredients = []
       let shuffledIngredients = []
       let correctIngredients = []
+
       // get correct ingredients
-          chosenDrink.ingredients.forEach(iHash => {
+          winningCocktail.ingredients.forEach(iHash => {
             correctIngredients.push(iHash.ingredient)
           })
-
       // get all ingredients
-          cocktailArray.forEach(c => {
+          cocktails.forEach(c => {
               c.ingredients.forEach(iHash => {
                 allIngredientNames.push(iHash.ingredient)
               })
           })
-
-      // get unique names
+          console.log(allIngredientNames);
+      // get unique options
+          allIngredientNames.sort()
           uniqIngredients = [...new Set(allIngredientNames)]
+          console.log(uniqIngredients);
       // shuffle unique names
           shuffledIngredients = shuffle(uniqIngredients)
+          console.log(shuffledIngredients);
 
       // add correct to round & ensure unique vals
           roundIngredients = combineWinningWithRandom(correctIngredients, shuffledIngredients)
           uniqRoundIngredients = [...new Set(roundIngredients)]
             // TO DO this will not insure a set of 12 options each time.... need to fix
 
-      return roundIngredients
+      return uniqRoundIngredients
     } // end of getRoundIngredients
 
     function combineWinningWithRandom(correctIngredients, shuffledIngredients) {
