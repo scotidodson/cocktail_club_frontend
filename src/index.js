@@ -308,7 +308,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function adjustDrinkLevel(score) {
       let level = 100 - score
-      //let current = parseInt(drinkStyle.top) || 50
+      let current = parseInt(drinkStyle.top) || 50
+      let changer
+
       if (score == 100) {
         level = 5
         strawStyle.opacity = .8
@@ -316,7 +318,20 @@ document.addEventListener('DOMContentLoaded', () => {
       if (score == 0) {
         lemonStyle.display = "none"
       }
-      drinkStyle.top = `${level}%`
+
+      changer = setInterval(()=>{
+          if( level < current ){
+            current-= .25
+            drinkStyle.top = `${current}%`
+          } else if (current < level ) {
+            current+= .25
+            drinkStyle.top = `${current}%`
+          } else if (level === current) {
+            clearInterval(changer)
+          }
+      }, 50)
+
+      // drinkStyle.top = `${level}%`
     } // end of adjustDrinkLevel
 
     function handleEndOfRound(remainingQuizDrinks, round, score, selectedNames) {
@@ -454,15 +469,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function showFirstIngredientForm(newCocktail) {
       console.log("added name");
       formPage.innerHTML =`
-      <h3>${newCocktail.name}</h3>
+      <h3>Making:<br> ${newCocktail.name}</h3>
+      <br><br>
       <h4 class="form-instructions">What's in it?</h4>
       <form class="add-cocktail-ingredients">
       <ul class="submitted-ingredients"></ul>
       <br>
       <br>
       <div class="adding-ingredient">
-      <input name="amount" placeholder="Amount">
-      <input name="ingredient" placeholder="ingredient">
+      <input name="amount" type="text" placeholder="Amount">
+      <input name="ingredient" type="text" placeholder="ingredient">
       </div>
       <br>
       <br>
@@ -489,11 +505,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (event.target.className === "another-ingredient") {
           submittedUl.innerHTML += `
-          <li>${amountVal} ${ingredientVal}</li>
+          <p class="form-ingredients">${amountVal} ${ingredientVal}</p>
           `
           ingredientsDiv.innerHTML = `
-          <input name="amount" placeholder="Amount">
-          <input name="ingredient" placeholder="ingredient">
+          <input name="amount" placeholder="Amount"  type="text">
+          <input name="ingredient" placeholder="ingredient"  type="text">
           `
         } else if (event.target.className === "added-ingredient") {
           showInstructionsForm(newCocktail)
@@ -528,7 +544,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       formHeader.innerHTML = "How do you make it?"
       ingredientsDiv.innerHTML = `
-      <input name="instructions" placeholder="instructions">
+      <input name="instructions"  type="text" placeholder="instructions">
       `
       buttons.innerHTML = ""
 
@@ -565,39 +581,3 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 }); // end of DOMContentLoaded
-
-
-// $(document).ready(function(){
-//   let worker = null;
-//   let loaded = 0;
-//
-//   function increment(loaded) {
-//       $('#drink').css('top', (loaded)+'%');
-//       // if(loaded==10) $('#cubes div:nth-child(1)').fadeIn(100);
-//       // if(loaded==20) $('#cubes div:nth-child(2)').fadeIn(100);
-//       // if(loaded==30) $('#cubes div:nth-child(3)').fadeIn(100);
-//       // if(loaded==40) $('#cubes div:nth-child(3)').fadeIn(100);
-//       // if(loaded==50) $('#cubes div:nth-child(3)').fadeIn(100);
-//       // if(loaded==60) $('#cubes div:nth-child(3)').fadeIn(100);
-//       // if(loaded==70) $('#cubes div:nth-child(3)').fadeIn(100);
-//       // if(loaded==80) $('#cubes div:nth-child(3)').fadeIn(100);
-//       // if(loaded==90) $('#cubes div:nth-child(3)').fadeIn(100);
-//       if(loaded==95) {
-//           $('#lemon').fadeIn(100);
-//           $('#straw').fadeIn(300);
-//       }
-//   }
-//
-//   function startLoading(loaded) {
-//       $('#lemon').hide();
-//       $('#straw').hide();
-//       $('#cubes div').hide();
-//       increment(loaded)
-//   }
-//   function stopLoading() {
-//       clearInterval(worker);
-//   }
-//
-//   // startLoading(30);
-//
-// });
