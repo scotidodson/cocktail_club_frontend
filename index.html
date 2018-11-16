@@ -27,6 +27,8 @@
     </div>
 
     <div class="main container">
+
+<!-- about page -->
       <div class="item-homepage">
         <h2 >Test your cocktail knowledge with the bartender</h2>
         <h4>Fill your glass to win her over and achieve regular status.</h4>
@@ -35,7 +37,47 @@
         <h4>You'll be too embarassed to return and probably end up crying on the subway.</h4>
         <h2> Cheers!</h2>
       </div>
-    </div>
+<!-- quiz page -->
+      <div class="quiz-page" hidden>
+        <div class="quiz-container">
+          <div class="quiz-item-one">
+            <div id="loader">
+                <div id="lemon"></div>
+                <div id="straw"></div>
+                <div id="glass">
+                    <div id="cubes">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    <div id="drink"></div>
+                    <span id="counter"></span>
+                </div>
+                <div id="coaster"></div>
+                <footer>I'll pour more...<br>if you can tell me what's in it.</footer>
+            </div>
+          </div>
+          <div class="quiz-item-two">
+            <div class="item-about about quiz-prompt">
+            </div>
+          </div>
+        </div>
+      </div>
+<!-- study page -->
+      <div class="study-page container" hidden>
+      </div>
+
+<!-- form page -->
+  <div class="form-page" hidden>
+    <form class="new-cocktail-form">
+    <input name="name" placeholder="Cocktail Name"> <br><br>
+    <button id="button" class="added-name-btn" type="submit" value="Submit">Next</button>
+    </form>
+
+  </div>
+
+</div>
+<!-- end of .main .container -->
   <script src="src/index.js"></script>
   <script src="src/buttons.js"></script>
   <script src="src/drink.js"></script>

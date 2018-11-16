@@ -4,8 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const neonHeader = document.querySelector('.neon_text')
   const navBox = document.querySelector('.navigation')
   const pageBody = document.querySelector('.main')
-  const aboutPage = document.querySelector('.about')
-  const quizPage = document.querySelector('.quiz')
+  const aboutPage = document.querySelector('.item-homepage')
+  const quizPage = document.querySelector('.quiz-page')
+  const studyPage = document.querySelector('.study-page')
+  const formPage = document.querySelector('.form-page')
+  const quizBox = document.querySelector('.quiz-prompt')
   let ingredients
   let quizBoxListenerOn = false
   let score
@@ -23,6 +26,18 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (event.target.className === "create-btn") {
       showNewCocktailForm()
     }
+  })
+
+    studyPage.addEventListener('click', (event) => {
+      console.log('clicked');
+      console.log(event.target);
+    // if (event.target.className === "test-btn") {
+    //   startQuiz()
+    // } else if (event.target.className === "study-btn") {
+    //   studyRecipes()
+    // } else if (event.target.className === "create-btn") {
+    //   showNewCocktailForm()
+    // }
   })
 
     pageBody.addEventListener('submit', (event) => {
@@ -78,7 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(resp => resp.json())
       .then(cocktailData => {
         cocktails = cocktailData
-        pageBody.innerHTML = ""
+        aboutPage.hidden = true
+        quizPage.hidden = true
+        formPage.hidden = true
+        studyPage.hidden = false
         cocktails.forEach((cocktail) => {
         renderOneCocktail(cocktail)
         // TODO -- once data is seeded, start with one recipe, then add next button to go through.
@@ -88,19 +106,19 @@ document.addEventListener('DOMContentLoaded', () => {
     } // end of studyRecipes
 
     function renderOneCocktail(cocktail) {
-      // <p class="study-ingredients">
-      // <button id="button" class="flip-btn gone">
-      // Flip
-      // </button>
-      // <button id="button" class="delete-btn gone">
-      // Hide
-      // </button>
-      // <button id="button" class="delete-btn gone">
-      // Delete
-      // </button>
-      // </p>
-      pageBody.innerHTML += `
+      studyPage.innerHTML += `
         <div class="item">
+        <p class="study-ingredients">
+        <button id="button" class="flip-btn gone">
+        Flip
+        </button>
+        <button id="button" class="delete-btn gone">
+        Hide
+        </button>
+        <button id="button" class="delete-btn gone">
+        Delete
+        </button>
+        </p>
               <h2 class="name">${cocktail.name}</h2>
               <p class="study-ingredients">${renderRecipeIngredients(cocktail)}</p>
               <p class="instructions">${cocktail.instructions}</p>
@@ -129,36 +147,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // ------------------------ functions for quiz path -----------------------
 
     function startQuiz() {
-      console.log("selected start quiz");
-      pageBody.innerHTML = `
-        <div class="quiz-container">
-          <div class="quiz-item-one">
-            <div id="loader">
-                <div id="lemon"></div>
-                <div id="straw"></div>
-                <div id="glass">
-                    <div id="cubes">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                    </div>
-                    <div id="drink"></div>
-                    <span id="counter"></span>
-                </div>
-                <div id="coaster"></div>
-                <footer>I'll pour you a drink if you can tell me what's in it...</footer>
-            </div>
-          </div>
-          <div class="quiz-item-two">
-            <div class="item-about about">
-            </div>
-          </div>
-        </div>
-      `
-      startRound()
-    } // end of startQuiz
-
-    function startRound() {
+      aboutPage.hidden = true
+      quizPage.hidden = false
+      studyPage.hidden = true
+      formPage.hidden = true
       let remainingQuizDrinks = []
       let round = 1
       let winningCocktail = null
@@ -168,9 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
       allDatabaseCocktails
       winningCocktail = chooseRandom(cocktails)
       roundIngredients = getRoundIngredients(cocktails, winningCocktail)
-          console.log("startRound roundIngredients:");
-          console.log(roundIngredients);
-
       cocktails.forEach(c=>{
         if (c.id != winningCocktail.id) {
           remainingQuizDrinks.push(c)
@@ -179,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       renderRound(remainingQuizDrinks, winningCocktail, roundIngredients, round, score)
       // pourDrink(50)
-    } // end of startRound
+    } // end of startQuiz
 
     function nextRound(round, score, remainingQuizDrinks) {
       let i = 0
@@ -200,7 +189,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } // end of nextRound
 
     function renderRound(remainingQuizDrinks, winningCocktail, roundIngredients, round, score) {
-      const quizBox = document.querySelector('.item-about')
       quizBox.innerHTML = `
           <h2>${winningCocktail.name}</h2>
           <div class="answer-container">
@@ -208,7 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           <br>
           <button class="check-answers" type="button" value="submit">Put it on my tab?</button>
-
         `
       handleResponse(remainingQuizDrinks, winningCocktail, roundIngredients, round, score, quizBox)
     } // end of renderRound
@@ -322,11 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function toggleTrueFalse(event) {
-      // if (event.target.dataset.selected = "false") {
-      //   event.target.dataset.selected = "true"
-      // } else {
-      //   event.target.dataset.selected = "false"
-      // }
+
       if (event.target.dataset.selected === "false") {
         event.target.dataset.selected = "true"
       } else {
@@ -397,13 +380,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // ------------------------ functions for adding a custom cocktail --------
 
     function showNewCocktailForm() {
-      console.log("show me the form");
-      pageBody.innerHTML =`
-      <form class="new-cocktail-form">
-      <input name="name" placeholder="Cocktail Name"> <br><br>
-      <button id="button" class="added-name-btn" type="submit" value="Submit">Next</button>
-      </form>
-      `
+      aboutPage.hidden = true
+      quizPage.hidden = true
+      formPage.hidden = false
+      studyPage.hidden = true
     } // showNewCocktailForm
 
     function addCustomCocktailName(nameInput){
@@ -427,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showFirstIngredientForm(newCocktail) {
       console.log("added name");
-      pageBody.innerHTML =`
+      formPage.innerHTML =`
       <h3>${newCocktail.name}</h3>
       <h4 class="form-instructions">What's in it?</h4>
       <form class="add-cocktail-ingredients">
@@ -535,16 +515,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   function resetHomepage() {
-    pageBody.innerHTML = `
-    <div class="item-homepage">
-      <h2 >Test your cocktail knowledge with the bartender</h2>
-      <h4>Fill your glass to win her over and achieve regular status.</h4>
-      <img src="images/cocktail.png" alt="cocktail image">
-      <h4>Don't let your glass reach empty...</h4>
-      <h4>You'll be too embarassed to return and probably end up crying on the subway.</h4>
-      <h2> Cheers!</h2>
-    </div>
-    `
+    aboutPage.hidden = false
+    quizPage.hidden = true
+    formPage.hidden = true
+    studyPage.hidden = true
   }
 
 }); // end of DOMContentLoaded
