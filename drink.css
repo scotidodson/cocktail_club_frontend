@@ -23,10 +23,10 @@
 #drink {
     position: absolute;
     top:100%; right:0; bottom:0; left:0;
-    background: linear-gradient(to bottom, #cc9966, #4717F6, orangered) !important
+    background: linear-gradient(to bottom, #cc9966, #4327b2, orangered) !important
     ;
     box-shadow: inset 0 2px 1px rgba(255,69,0,.2);
-    opacity: .7;
+    opacity: .6;
 }
 
 div#drink {
@@ -39,7 +39,7 @@ div#drink {
 #lemon {
     opacity: 0;
     position: absolute;
-    top:0; right:0;
+    top:8px; right:6px;
     height:70px; width:70px;
     margin-top:-38px; margin-right:-38px;
     background: radial-gradient(#f7f3b6 10%, #ffffcc);

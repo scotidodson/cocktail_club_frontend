@@ -1,23 +1,30 @@
 document.addEventListener('DOMContentLoaded', () => {
   const cocktailUrl = `http://localhost:3000/api/v1/cocktails`
   const ingredientUrl = `http://localhost:3000/api/v1/ingredients`
+
   const neonHeader = document.querySelector('.neon_text')
   const navBox = document.querySelector('.navigation')
   const pageBody = document.querySelector('.main')
+
   const aboutPage = document.querySelector('#about-page')
   const quizPage = document.querySelector('.quiz-page')
   const studyPage = document.querySelector('.study-page')
   const formPage = document.querySelector('.form-page')
   const quizBox = document.querySelector('.quiz-prompt')
+
   const drinkDiv = document.querySelector('#drink')
   const drinkStyle = drinkDiv.style
+
   const lemon = document.querySelector('#lemon')
   const lemonStyle = lemon.style
+
   const straw = document.querySelector('#straw')
   const strawStyle = straw.style
+
   let ingredients
   let quizBoxListenerOn = false
   let score
+  let round
   // ------------------------- LISTENERS ------------------------------------
 
     neonHeader.addEventListener('click', (event) => {
@@ -26,8 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     navBox.addEventListener('click', (event) => {
     if (event.target.className === "test-btn") {
-      toggleView(quizPage)
-      startQuiz()
+      // debugger
+      if (round) {
+          alert("You're already playing - finish your game!")
+      } else {
+        toggleView(quizPage)
+        startQuiz()
+      }
     } else if (event.target.className === "study-btn") {
       toggleView(studyPage)
       studyRecipes()
@@ -36,17 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 
-    studyPage.addEventListener('click', (event) => {
-      console.log('clicked');
-      console.log(event.target);
-    // if (event.target.className === "test-btn") {
-    //   startQuiz()
-    // } else if (event.target.className === "study-btn") {
-    //   studyRecipes()
-    // } else if (event.target.className === "create-btn") {
-    //   showNewCocktailForm()
-    // }
-  })
+    // studyPage.addEventListener('click', handleFlipping(event))
 
     pageBody.addEventListener('submit', (event) => {
     event.preventDefault()
@@ -104,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         aboutPage.hidden = true
         quizPage.hidden = false
         studyPage.hidden = true
+        studyPage.innerHTML = ""
         formPage.hidden = true
           break;
         case studyPage:
@@ -116,12 +119,14 @@ document.addEventListener('DOMContentLoaded', () => {
         aboutPage.hidden = true
         quizPage.hidden = true
         studyPage.hidden = true
+        studyPage.innerHTML = ""
         formPage.hidden = false
           break;
         default:
         aboutPage.hidden = false
         quizPage.hidden = true
         studyPage.hidden = true
+        studyPage.innerHTML = ""
         formPage.hidden = true
       }
     } // end of toggleView
@@ -143,34 +148,35 @@ document.addEventListener('DOMContentLoaded', () => {
     } // end of studyRecipes
 
     function renderOneCocktail(cocktail) {
+      // <p class="study-ingredients">
+      // <button id="button" class="flip-btn gone">
+      // Flip
+      // </button>
+      // <button id="button" class="delete-btn gone">
+      // Hide
+      // </button>
+      // <button id="button" class="delete-btn gone">
+      // Delete
+      // </button>
+      // </p>
       studyPage.innerHTML += `
         <div class="item">
-        <p class="study-ingredients">
-        <button id="button" class="flip-btn gone">
-        Flip
-        </button>
-        <button id="button" class="delete-btn gone">
-        Hide
-        </button>
-        <button id="button" class="delete-btn gone">
-        Delete
-        </button>
-        </p>
+          <div class="recipe-front">
               <h2 class="name">${cocktail.name}</h2>
+          </div>
+          <div class="recipe-back" >
               <p class="study-ingredients">${renderRecipeIngredients(cocktail)}</p>
               <p class="instructions">${cocktail.instructions}</p>
+          </div>
         </div>
       `
-      // handleFlipping()
     } // end of renderOneCocktail
 
-    // function handleFlipping() {
-    //   pageBody.addEventListener('click', ()=>{
-    //     if (event.target.className === "flipper") {
-    //       console.log('clicked');
-    //     }
-    //     // debugger
-    //   })
+    // function handleFlipping(event) {
+    //   if (event.target.className === "recipe-front") {
+    //       event.target.hidden = !event.target.hidden
+    //   }
+    //   debugger
     // }
 
     function renderRecipeIngredients(cocktail) {
@@ -185,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startQuiz() {
       let remainingQuizDrinks = []
-      let round = 1
+      round = 1
       score = 50
       adjustDrinkLevel(score)
       roundToRender(round, score, remainingQuizDrinks)
