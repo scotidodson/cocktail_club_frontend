@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let ingredients
   let quizBoxListenerOn = false
+  let falseIngredients = ["Bacon", "Butter", "Eucalyptus", "Paprika", "Matcha", "Camel's Milk"]
   let score
   let round
   // ------------------------- LISTENERS ------------------------------------
@@ -387,19 +388,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 allIngredientNames.push(iHash.ingredient)
               })
           })
-          console.log(allIngredientNames);
+
       // get unique options
           allIngredientNames.sort()
           uniqIngredients = [...new Set(allIngredientNames)]
-          console.log(uniqIngredients);
+
       // shuffle unique names
           shuffledIngredients = shuffle(uniqIngredients)
-          console.log(shuffledIngredients);
+          console.log(shuffledIngredients[0]);
 
       // add correct to round & ensure unique vals
           roundIngredients = combineWinningWithRandom(correctIngredients, shuffledIngredients)
           uniqRoundIngredients = [...new Set(roundIngredients)]
-            // TO DO this will not insure a set of 12 options each time.... need to fix
+          console.log('unique starts - ');
+          console.log(uniqRoundIngredients);
+      // back to 12 if needed
+          if (uniqRoundIngredients.length < 12) {
+            let need = null
+            let x
+            need = 12 - uniqRoundIngredients.length
+            falseIngredients = shuffle(falseIngredients)
+
+            for (x = 0; x < need; x++) {
+              uniqRoundIngredients.push(falseIngredients[x])
+            }
+            uniqRoundIngredients = shuffle(uniqRoundIngredients)
+          }
+          console.log('then');
+          console.log(uniqRoundIngredients);
 
       return uniqRoundIngredients
     } // end of getRoundIngredients
